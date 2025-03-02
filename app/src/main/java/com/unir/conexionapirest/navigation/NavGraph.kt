@@ -10,7 +10,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.unir.conexionapirest.ui.screens.FavMoviesScreen
 import com.unir.conexionapirest.ui.screens.MainScreen
 import com.unir.conexionapirest.ui.screens.MovieDetailScreen
 
@@ -50,30 +49,25 @@ fun NavGraph(
             }
         }
 
-        // Aquí va el NavHost, donde defines las rutas de las pantallas
+        // DEFINICIÓN DE LAS RUTAS DE CADA PANTALLA
         NavHost(
             navController = navController,
             startDestination = ScreensRoutes.MainScreen.route
         ) {
 
-            // Pantalla de inicio
+            // Pantalla principal
             composable(ScreensRoutes.MainScreen.route) {
                 MainScreen()
             }
 
-            // Pantalla de Favoritos
-            composable(ScreensRoutes.FavScreen.route) {
-                FavMoviesScreen()
-            }
 
-
-            // Pantalla de detalles de películas
+            // Pantalla de detalles
             composable(
-                ScreensRoutes.MovieDetailScreen.route,
+                ScreensRoutes.DetailScreen.route,
                 arguments = listOf(navArgument("movieID") { type = NavType.StringType })
             ) { backStackEntry ->
                 val movieId = backStackEntry.arguments?.getString("movieID") ?: "0"
-                MovieDetailScreen(movieId = movieId)
+                MovieDetailScreen(id = movieId)
             }
         }
     }

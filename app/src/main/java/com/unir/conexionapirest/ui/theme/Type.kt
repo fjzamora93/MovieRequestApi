@@ -35,6 +35,14 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     ),
 
+    labelLarge = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Medium,
+        fontSize = 18.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 0.5.sp
+    ),
+
     // Letra normal para el texto
     bodyMedium = TextStyle(
         fontFamily = FontFamily(Font(R.font.antiqua)),

@@ -2,13 +2,8 @@ package com.unir.conexionapirest.di
 
 import android.content.Context
 import androidx.room.Room
-import com.unir.conexionapirest.data.database.MovieApiService
-
-import com.unir.conexionapirest.data.database.MovieDao
-import com.unir.conexionapirest.data.database.MovieDatabase
-import com.unir.conexionapirest.data.repository.LocalMovieRepository
-import com.unir.conexionapirest.data.repository.MovieRepository
-import com.unir.conexionapirest.data.repository.RemoteMovieRepository
+import com.unir.conexionapirest.data.service.ApiService
+import com.unir.conexionapirest.data.repository.Repository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,7 +30,7 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://www.omdbapi.com/")
+            .baseUrl("https://peticiones.online/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -43,49 +38,19 @@ object NetworkModule {
     /** INSTANCIA ÚNICA DEL SERVICIO API */
     @Provides
     @Singleton
-    fun provideMovieApiService(retrofit: Retrofit): MovieApiService {
-        return retrofit.create(MovieApiService::class.java)
+    fun provideApiService(retrofit: Retrofit): ApiService {
+        return retrofit.create(ApiService::class.java)
     }
 
-    /** INSTANCIA ÚNICA DEL REPOSITORIO UNIFICADO (LOCAL + REMOTO) */
-    @Provides
-    @Singleton
-    fun provideMovieRepository(
-        localMovieRepository: LocalMovieRepository,
-        remoteMovieRepository: RemoteMovieRepository
-    ): MovieRepository {
-        return MovieRepository(localMovieRepository, remoteMovieRepository)
-    }
+
 
     /** INSTANCIA ÚNICA DEL REPOSITORIO REMOTO */
     @Provides
     @Singleton
-    fun provideMovieRemoteRepository(movieApiService: MovieApiService): RemoteMovieRepository {
-        return RemoteMovieRepository(movieApiService)
+    fun provideMovieRemoteRepository(apiService: ApiService): Repository {
+        return Repository(apiService)
     }
 
-    /** INSTANCIA ÚNICA DE LA BASE DE DATOS SQLITE LOCAL */
-    @Provides
-    @Singleton
-    fun provideMovieDatabase(@ApplicationContext context: Context): MovieDatabase {
-        return Room.databaseBuilder(
-            context,
-            MovieDatabase::class.java,
-            "movie_database"
-        ).build()
-    }
 
-    /** INSTANCIA ÚNICA DEL DAO, QUE VA A LA BASE DE DATOS LOCAL */
-    @Provides
-    @Singleton
-    fun provideMovieDao(movieDatabase: MovieDatabase): MovieDao {
-        return movieDatabase.getMovieDao()
-    }
 
-    /** INSTANCIA ÚNICA DEL REPOSITORIO LOCAL */
-    @Provides
-    @Singleton
-    fun provideLocalMovieRepository(movieDao: MovieDao): LocalMovieRepository {
-        return LocalMovieRepository(movieDao)
-    }
 }

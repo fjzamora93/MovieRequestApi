@@ -6,10 +6,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
@@ -26,15 +28,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.unir.conexionapirest.navigation.LocalNavigationViewModel
-import com.unir.conexionapirest.navigation.NavigationViewModel
-import com.unir.conexionapirest.navigation.ScreensRoutes
-import com.unir.conexionapirest.ui.screens.MenuOption
-import com.unir.conexionapirest.ui.theme.MiPaletaDeColores
 
 @Composable
 fun Header(
     modifier: Modifier = Modifier,
-    onMenuClick: () -> Unit,
 ) {
     val activity = LocalContext.current as Activity
     val navigationViewModel = LocalNavigationViewModel.current
@@ -47,21 +44,12 @@ fun Header(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Menú de la aplicación
-            Icon(
-                imageVector = Icons.Default.Menu,
-                contentDescription = "open menu",
-                modifier = Modifier
-                    .size(40.dp)
-                    .clickable { onMenuClick() }
-            )
-
+            Spacer(modifier = Modifier.weight(1f))
             HomeButton()
-
-
+            Spacer(modifier = Modifier.weight(1f))
             Icon(
                 imageVector = Icons.Default.Close,
                 contentDescription = "close app",

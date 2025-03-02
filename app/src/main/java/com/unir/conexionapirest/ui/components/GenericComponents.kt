@@ -2,17 +2,14 @@ package com.unir.conexionapirest.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material.icons.filled.Search
@@ -32,18 +29,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.unir.conexionapirest.data.model.SearchFilter
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.unir.conexionapirest.navigation.LocalNavigationViewModel
 import com.unir.conexionapirest.navigation.ScreensRoutes
 import com.unir.conexionapirest.ui.theme.ButtonsModifier
 import com.unir.conexionapirest.ui.theme.MiPaletaDeColores
+import com.unir.conexionapirest.ui.viewmodels.ViewModel
 
 @Composable
 fun CustomHorizontalDivider(
     modifier: Modifier = Modifier,
     color: Color = MiPaletaDeColores.Bronze,
     thickness: Dp = 4.dp,
-    startIndent: Dp = 0.dp
 ) {
     HorizontalDivider(
         modifier = modifier,
@@ -52,47 +49,15 @@ fun CustomHorizontalDivider(
     )
 }
 
-@Composable
-fun BookMarkButton(
-    onClick: () -> Unit,
-) {
-    IconButton(
-        onClick = { onClick() },
-        modifier = ButtonsModifier.regularIcon
-    ) {
-        Icon(
-            imageVector = Icons.Default.Favorite,
-            contentDescription = "Add to Favorites",
-            tint = MiPaletaDeColores.BloodRed
-        )
-    }
-}
-
-@Composable
-fun DislikeButton(
-    onClick: () -> Unit
-){
-    IconButton(
-        onClick = { onClick() },
-        modifier = ButtonsModifier.regularIcon
-    ) {
-        Icon(
-            imageVector = Icons.Default.Delete,
-            contentDescription = "Remove from Favorites",
-            tint = MiPaletaDeColores.LeatherAged
-        )
-    }
-}
 
 @Composable
 fun DetailButton(onClick: () -> Unit) {
     IconButton(
         onClick = onClick,
         modifier = ButtonsModifier.regularIcon
-
     ) {
         Icon(
-            imageVector = Icons.Default.RemoveRedEye, // Ícono de ojo
+            imageVector = Icons.Default.RemoveRedEye,
             contentDescription = "View Details",
             tint = MiPaletaDeColores.LeatherAged
         )
@@ -100,11 +65,9 @@ fun DetailButton(onClick: () -> Unit) {
 }
 
 
-
-
 @Composable
 fun SearchField(
-    onSearch: (String) -> Unit,
+    viewModel : ViewModel = hiltViewModel()
 ) {
     var searchText by remember { mutableStateOf("") }
     Row(
@@ -117,7 +80,7 @@ fun SearchField(
             value = searchText,
             onValueChange = {
                 searchText = it
-                println(searchText)
+                viewModel.filter(searchText)
             },
             label = { Text("Search") },
             modifier = Modifier
@@ -135,42 +98,18 @@ fun SearchField(
             singleLine = true
         )
 
-        SendButton(
-            modifier = Modifier
-                .weight(1f).padding(8.dp),
-            onClick = {
-                onSearch(searchText)
-            }
-        )
-
         ClearButton(
-            modifier = Modifier
-                .weight(1f),
+            modifier = Modifier.weight(1f),
             onClick = {
                 searchText = ""
-                println("Formulario limpiado")
+                viewModel.filter(searchText)
             }
         )
     }
 
 }
 
-@Composable
-fun SendButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    IconButton(
-        modifier = ButtonsModifier.navigationIcon,
-        onClick = onClick
-    ) {
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.Send,
-            contentDescription = "Send",
-            tint = MiPaletaDeColores.Gold
-        )
-    }
-}
+
 
 @Composable
 fun ClearButton(
@@ -189,22 +128,7 @@ fun ClearButton(
     }
 }
 
-@Composable
-fun BackButton() {
-    val navigationViewModel = LocalNavigationViewModel.current
 
-    IconButton(
-        onClick = { navigationViewModel.goBack() },
-        modifier = ButtonsModifier.navigationIcon
-    ) {
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = "Go Back",
-            tint = MiPaletaDeColores.Gold,
-            modifier = Modifier.size(24.dp)
-        )
-    }
-}
 
 
 @Composable
@@ -218,6 +142,7 @@ fun HomeButton() {
             .clip(CircleShape)
             .background(MiPaletaDeColores.Bronze)
             .padding(8.dp)
+
     ) {
         Icon(
             imageVector = Icons.Default.Home,
